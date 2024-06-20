@@ -8,13 +8,16 @@ files=("main.js" "styles.css")
 # Function to update version
 update_version() {
 	file=$1
-	version_file="/versions/$file.version"
+	version_file="./versions/$file.version"
+
 	# Get the current version
 	current_version=$(cat $version_file)
 	# Split the version into an array
 	IFS='.' read -r -a version_array <<<"$current_version"
 	# Increment the last element of the array
 	version_array[2]=$((${version_array[2]} + 1))
+
+	echo "Version updated: $current_version -> ${version_array[0]}.${version_array[1]}.${version_array[2]}"
 
 	# If the last element is 100, reset it and increment the previous element
 	if [ ${version_array[2]} -eq 100 ]; then
@@ -41,9 +44,9 @@ update_version() {
 for file in "${files[@]}"; do
 	# Check if there are changes in the file
 	if ! git diff --quiet $file; then
-		echo "Changes detected in $file. Updating version..."
+		echo "$file -> Changes detected in . Updating version..."
 		update_version $file
 	else
-		echo "No changes in $file."
+		echo "$file -> No changes detected."
 	fi
 done
