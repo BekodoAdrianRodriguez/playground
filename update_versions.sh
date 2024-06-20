@@ -46,7 +46,16 @@ for file in "${files[@]}"; do
 	if ! git diff --quiet $file; then
 		echo "$file -> Changes detected in . Updating version..."
 		update_version $file
+
+		# Add all changes to the staging area
+		git add .
+
+		# Commit the changes
+		git commit -m "Updated versions due to changes in files"
 	else
 		echo "$file -> No changes detected."
 	fi
 done
+
+# Push the changes to the remote repository
+git push origin master
