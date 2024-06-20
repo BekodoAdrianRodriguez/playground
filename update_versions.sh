@@ -2,6 +2,10 @@
 # Script to update the versions of the dependencies in the project with the latest versions (/versions)
 # Usage: ./update_versions.sh
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 # Define the files to check and update
 files=("main.js" "styles.css")
 
@@ -44,7 +48,7 @@ update_version() {
 for file in "${files[@]}"; do
 	# Check if there are changes in the file
 	if ! git diff --quiet $file; then
-		echo "$file -> Changes detected in . Updating version..."
+		echo -e "${RED}$file -> Changes detected in . Updating version...${NC}"
 		update_version $file
 
 		# Add all changes to the staging area
@@ -52,10 +56,15 @@ for file in "${files[@]}"; do
 
 		# Commit the changes
 		git commit -m "Updated versions due to changes in files"
+
+		echo -e "${GREEN}$file -> Version updated successfully.${NC}"
 	else
-		echo "$file -> No changes detected."
+		echo -e "${GREEN}$file -> No changes detected.${NC}"
 	fi
 done
 
-# Push the changes to the remote repository
-git push origin master
+# Push the changes to the remote repository if there are any
+if ! git diff --quiet; then
+	echo "Pushing changes to the remote repository..."
+	git push origin master
+fi
