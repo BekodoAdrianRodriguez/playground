@@ -48,7 +48,7 @@ for file in "${files[@]}"; do
 		update_version $file
 
 		# Add all changes to the staging area
-		git add .
+		git add versions/$file.version
 
 		# Commit the changes
 		git commit -m "Updated versions due to changes in files"
